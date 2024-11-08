@@ -20,11 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 //Entonces ya en esta clase se meten todas las excepciones que queramos controlar o sea 
 //se crean más métodos como handleModelNotFoundException
 // El extends ResponseEntityExceptionHandler es para manejar la excepción por un @Valid x ejemplo en PatientController
-@RestControllerAdvice  //intercepta cualquier excepción en el proyecto, evita estar haciendo try-catch en cada método
+@RestControllerAdvice  //OJO intercepta cualquier excepción en el proyecto, evita estar haciendo try-catch en cada método
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	
-	// Así se manejaba antes de springboot 3	
-	
+	// Así se manejaba antes de springboot 3, se dejó por temas de gusto y compatibilidad hacia atrás	
 	@ExceptionHandler(ModelNotFoundException.class) //para manejar la excepción ModelNotFoundException
 	public ResponseEntity<CustomErrorResponse> handleModelNotFoundException(ModelNotFoundException ex, WebRequest request){
 		//request.getDescription(false) es una descripción más abreviada que con el true
@@ -34,11 +33,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 	
 		
 	/*
-	// Así con Springboot 3 aparece Problemdetail, también en sb3 se puede hacer con ErrorResponse
+	// OJO con Springboot 3 aparece la clase ProblemDetail para excepciones, también en sb3 se puede hacer con ErrorResponse
 	@ExceptionHandler(ModelNotFoundException.class)
 	public ProblemDetail handleModelNotFoundException(ModelNotFoundException ex, WebRequest request){
 		
-		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());		
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());	
+		//puedo dejarlo sin setear las propiedades que van a continuación, en este caso sí las seteo para personalizar	
 		problemDetail.setTitle("Model Not Found");
 		problemDetail.setType(URI.create("/not-found"));
 		problemDetail.setProperty("extra1", "extra_value"); //puedo poner los setproperty que quiera con los valores que quiera y necesite
